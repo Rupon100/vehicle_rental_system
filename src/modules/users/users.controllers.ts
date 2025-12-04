@@ -9,6 +9,7 @@ const createUser = async(req: Request, res: Response) => {
 
         const result = await userServices.createUser(name, email, password, phone, role);
 
+        // this means not return password in json
         delete result.rows[0].password;
 
         res.status(201).json({
