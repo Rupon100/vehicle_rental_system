@@ -1,5 +1,7 @@
 import { pool } from "../../config/database"
 import bcrypt from "bcryptjs"
+import jwt from "jsonwebtoken"
+import { config } from "../../config";
 
 
 const signinUser = async(email: string, password: string) => {
@@ -16,7 +18,14 @@ const signinUser = async(email: string, password: string) => {
         return null;
     }
 
-    return { user }
+    // jwt signin - token create
+    const token = jwt.sign({email: user.email, password: user.password, role: user.password}, config.jwtSecret as string, {
+        expiresIn: '2d'
+    })
+
+    // console.log("token from auth service: ", token);
+
+    return { token, user }
 
 }
 
