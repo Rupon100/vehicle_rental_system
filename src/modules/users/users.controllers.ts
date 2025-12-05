@@ -49,9 +49,29 @@ const getAllUsers = async(req: Request, res: Response) => {
     }
 }
 
+// admin or customer
+const updateUser = async(req: Request, res: Response) => {
+    try{
+        const id = req.params.userId;
+        const { name, email, phone, role } = req.body;
+        const result = await userServices.updateUser(id as string, name, email, phone, role);
+        res.status(200).json({
+            success: true,
+            message: "User updated successfully",
+            data: result.rows[0]
+        })
+    }catch(err: any){
+        res.status(500).json({
+            success: false,
+            message: err.message
+        })
+    }
+}
+
 
 export const usersControllers = {
     createUser,
     getAllUsers,
-
+    updateUser,
+    
 }

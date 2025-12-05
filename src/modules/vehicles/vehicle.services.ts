@@ -16,9 +16,7 @@ const getVehicleById = async(id: string) => {
 }
 
 const updateVehicleById = async(id: string, vehicle_name: string, type: string, registration_number: string, daily_rent_price: string, availability_status: string) => {
-
     // we make option field using COALESCE
-
     const result = await pool.query(`
         UPDATE vehicles 
         SET vehicle_name = COALESCE($2, vehicle_name),

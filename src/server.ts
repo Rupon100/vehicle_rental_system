@@ -16,6 +16,13 @@ app.get('/', (req: Request, res: Response) => {
   res.send('Hello World!')
 })
 
+
+//------------------signin user--------------------
+app.use('/api/v1/auth', authRoutes);
+
+
+
+
 //------------------signup user--------------------
 app.use('/api/v1/auth', usersRoutes);
 
@@ -26,11 +33,13 @@ app.use('/api/v1/auth', usersRoutes);
 // delete user adminOnly
 
 
-//------------------signin user--------------------
-app.use('/api/v1/auth', authRoutes);
 
 //-----------------get users-----------------------
 app.use('/api/v1', usersRoutes)
+
+//----------------update users--------------
+app.use('/api/v1', usersRoutes);
+
 
 
 
