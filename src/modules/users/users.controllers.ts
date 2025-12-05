@@ -68,10 +68,29 @@ const updateUser = async(req: Request, res: Response) => {
     }
 }
 
+// delete user [ admin only ] only if not active bookings exist
+const deleteUser = async(req: Request, res: Response) => {
+    try{
+        const id = req.params.id;
+        const result = await pool.query('DELETE FROM users WHERE id=$1', [id]);
+        // put it in rowCount then send response
+        res.status(200).json({
+            success: true,
+            message: "User deleted successfully"
+        })
+    }catch(err: any){
+        res.status(500).json({
+            success: false,
+            message: err.message
+        })
+    }
+}
+
 
 export const usersControllers = {
     createUser,
     getAllUsers,
     updateUser,
+    deleteUser,
     
 }

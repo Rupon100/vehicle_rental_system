@@ -36,9 +36,16 @@ const updateUser = async(id:  string, name: string, email: string, phone: string
         return result;
 }
 
+// delete user [ admin only ] only if not active bookings exist
+const deleteUser = async(id: string) => {
+    // add condition here
+    const result = await pool.query('DELETE FROM users WHERE id=$1 RETURNING *', [id]);
+    return result;
+}
+
 export const userServices = {
     createUser,
     getAllUsers,
     updateUser,
-
+    deleteUser
 }
