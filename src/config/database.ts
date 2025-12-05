@@ -31,7 +31,16 @@ const initDB = async() => {
         )
         `)
 
-        // bookings
+    // bookings
+    await pool.query(`CREATE TABLE IF NOT EXISTS bookings(
+        id SERIAL PRIMARY KEY,
+        customer_id INT REFERENCES users(id) ON DELETE CASCADE,
+        vehicle_id INT REFERENCES vehicles(id) ON DELETE CASCADE,
+        rent_start_date VARCHAR(50) NOT NULL,
+        rent_end_date VARCHAR(50) NOT NULL,
+        total_price NUMERIC NOT NULL CHECK ( total_price > 0 ),
+        status VARCHAR(40) NOT NULL CHECK (status IN ('active', 'cancelled', 'returned'))
+        )`)
 
 }
 

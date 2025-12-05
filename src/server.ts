@@ -4,6 +4,7 @@ import initDB from "./config/database";
 import { usersRoutes } from "./modules/users/user.routes";
 import { authRoutes } from "./modules/auth/auth.routes";
 import { vehiclesRoute } from "./modules/vehicles/vehicles.route";
+import { bookingRoutes } from "./modules/bookings/booking.routes";
 const app = express();
 const port = config.port;
 
@@ -48,6 +49,10 @@ app.use('/api/v1/vehicles', vehiclesRoute);
 
 // get vehicles by id - its still working
 // app.use('/api/v1/vehicles', vehiclesRoute);
+
+
+//------------------booking--------------------------
+app.use('/api/v1/bookings', bookingRoutes)
 
 
 app.listen(port, () => {
