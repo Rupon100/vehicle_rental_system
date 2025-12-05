@@ -11,9 +11,9 @@ const verify = (...roles: string[]) => {
       console.log("token from verify middleware: ",barrier);
 
       if(!token){
-        return res.status(401).json({
+        return res.status(403).json({
             success: false,
-            message: "Missing authentication token!"
+            message: "Valid token but insufficient permissions"
         })
       }
 
@@ -25,9 +25,9 @@ const verify = (...roles: string[]) => {
       req.user = decoded;
 
       if(roles.length && !roles.includes(decoded.role)){
-        return res.status(401).json({
+        return res.status(403).json({
             success: true,
-            message: "Unauthorized Access!"
+            message: "Valid token but insufficient permissions"
         })
       }
 
