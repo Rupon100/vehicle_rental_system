@@ -29,6 +29,9 @@ app.use('/api/v1/auth', usersRoutes);
 //------------------signin user--------------------
 app.use('/api/v1/auth', authRoutes);
 
+//-----------------get users-----------------------
+app.use('/api/v1', usersRoutes)
+
 
 
 //------------------vehicle-------------------------

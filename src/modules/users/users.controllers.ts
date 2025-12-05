@@ -27,8 +27,31 @@ const createUser = async(req: Request, res: Response) => {
 }
 
 
+// admin only
+const getAllUsers = async(req: Request, res: Response) => {
+    try{
+        const result = await userServices.getAllUsers();
+        // remove password
+        const users = result.rows.map(user => {
+            const { password, ...restUser } = user;
+            return restUser;
+        })
+        res.status(200).json({
+            success: true,
+            message: "Users retrieved successfully",
+            data: users
+        })
+    }catch(err: any){
+        res.status(500).json({
+            success: false,
+            message: err.message,
+        })
+    }
+}
+
 
 export const usersControllers = {
     createUser,
+    getAllUsers,
 
 }

@@ -17,7 +17,14 @@ const createUser = async(name: string, email: string, password: string, phone: s
     return result;
 }
 
+// admin only
+const getAllUsers = async() => {
+    const result = await pool.query(`SELECT * FROM users`);
+    return result;
+}
+
 export const userServices = {
     createUser,
-
+    getAllUsers,
+    
 }
