@@ -10,4 +10,11 @@ router.post('/', verify('admin'),vehiclesControllers.createVehicle);
 // get all vehicles [ public api ]
 router.get('/', vehiclesControllers.getVehicles);
 
+// get vehicle by ID [ public ]
+router.get('/:vehicleId', vehiclesControllers.getVehicleById);
+
+// update vehicle [ admin only ]
+
+
+
 export const vehiclesRoute = router;

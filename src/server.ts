@@ -34,6 +34,9 @@ app.use('/api/v1/auth', authRoutes);
 //------------------vehicle-------------------------
 app.use('/api/v1/vehicles', vehiclesRoute);
 
+// get vehicles by id - its still working
+// app.use('/api/v1/vehicles', vehiclesRoute);
+
 
 app.listen(port, () => {
   console.log(`Running on: https://localhost:${port}`)

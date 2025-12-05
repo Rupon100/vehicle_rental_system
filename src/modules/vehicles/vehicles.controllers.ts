@@ -36,8 +36,30 @@ const getVehicles = async(req: Request, res: Response) => {
     }
 }
 
+const getVehicleById = async(req: Request, res: Response) => {
+    try{
+        const id =  req.params.vehicleId;
+        const result = await vehicleServices.getVehicleById(id as string);
+        console.log(result)
+        res.status(200).json({
+            success: true,
+            message: "Vehicle retrieved successfully",
+            data: result.rows[0]
+        })
+    }catch(err: any){
+        res.status(500).json({
+            success: false,
+            message: err.message
+        })
+    }
+}
+
+// admin only
+
+
 export const vehiclesControllers = {
     createVehicle,
     getVehicles,
+    getVehicleById,
 
 }
