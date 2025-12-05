@@ -55,11 +55,30 @@ const getVehicleById = async(req: Request, res: Response) => {
 }
 
 // admin only
+const updateVehicleById = async(req: Request, res: Response) => {
+    try{
+        const id =  req.params.vehicleId;
+        const { vehicle_name, type, registration_number, daily_rent_price, availability_status } = req.body;
+        const result = await vehicleServices.updateVehicleById(id as string, vehicle_name, type, registration_number, daily_rent_price, availability_status)
+        res.status(200).json({
+            success: true,
+            message: "Vehicle updated successfully",
+            data: result.rows[0]
+        })
+    }catch(err: any){
+        res.status(500).json({
+            success: false,
+            message: err.message
+        })
+    }
+}
 
+// delete vehicle [admin only]
 
 export const vehiclesControllers = {
     createVehicle,
     getVehicles,
     getVehicleById,
+    updateVehicleById,
 
 }
