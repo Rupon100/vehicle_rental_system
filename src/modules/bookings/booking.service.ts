@@ -19,7 +19,7 @@ const createBooking = async (
 
   // vehicle details -> calculate total rent
   const vehicleResult = await getVehicleFrBookings(vehicle_id);
-  const vehicle = vehicleResult.rows[0];
+  const vehicle = vehicleResult;
 
   if (!vehicle) {
     throw new Error("Vehicle not found!");
@@ -43,6 +43,11 @@ const createBooking = async (
       "active",
     ]
   );
+
+  // update vehicle availability status 
+  await pool.query(`UPDATE vehicles SET availability_status = 'booked' WHERE id=$1`, [vehicle_id]);
+
+  // 
 
   return {
     ...result.rows[0],
