@@ -27,7 +27,9 @@ const createBooking = async(req: Request, res: Response) => {
 const getAllBookings = async(req: Request, res: Response) => {
     try{
         // MAKE A CONDITION BASE ON ADMIN | CUSTOMER
-        const result = await bookingService.getAllBookings();
+        const role = req.user?.role;
+        console.log('current role booking: ', role)
+        const result = await bookingService.getAllBookings(role);
         res.status(200).json({
             success: true,
             message: "Bookings retrieved successfully",

@@ -55,43 +55,64 @@ const createBooking = async (
   };
 };
 
-const getAllBookings = async() => {
-    const result = await pool.query(`SELECT * FROM bookings`);
-    const bookings = result.rows;
+const getAllBookings = async (role: string) => {
+  const result = await pool.query(`SELECT * FROM bookings`);
+  const bookings = result.rows;
 
+  if (role === "admin") {
+    const populatedBookingsAdmin = await Promise.all(
+      bookings.map(async (book) => {
+        const customer = await getCustomerDetails(book.customer_id);
+        const vehicle = await getVehicleFrBookings(book.vehicle_id);
 
-    const populatedBookings = await Promise.all(
-        bookings.map(async(book) => {
-            const customer = await getCustomerDetails(book.customer_id);
-            const vehicle = await getVehicleFrBookings(book.vehicle_id);
+        return {
+          id: book.id,
+          customer_id: book.customer_id,
+          vehicle_id: book.vehicle_id,
+          rent_start_date: book.rent_start_date,
+          rent_end_date: book.rent_end_date,
+          total_price: Number(book.total_price),
+          status: book.status,
+          customer: {
+            name: customer.name,
+            email: customer.email,
+          },
+          vehicle: {
+            vehicle_name: vehicle.vehicle_name,
+            registration_number: vehicle.registration_number,
+          },
+        };
+      })
+    );
 
-            return {
-                id: book.id,
-                customer_id: book.customer_id,
-                vehicle_id: book.vehicle_id,
-                rent_start_date: book.rent_start_date,
-                rent_end_date: book.rent_end_date,
-                total_price: Number(book.total_price),
-                status: book.status,
-                customer: {
-                    name: customer.name,
-                    email: customer.email
-                },
-                vehicle: {
-                vehicle_name: vehicle.vehicle_name,
-                registration_number: vehicle.registration_number
-                }
-            }
+    return populatedBookingsAdmin;
+  }
 
-        })
-    )
+  // customer view
+  const customerBookings = await Promise.all(
+    bookings.map(async (book) => {
+      const vehicle = await getVehicleFrBookings(book.vehicle_id);
+    //   const vehicle = vehicleResult.rows[0];
 
-    return populatedBookings;
- 
-}
+      return {
+        id: book.id,
+        vehicle_id: book.vehicle_id,
+        rent_start_date: book.rent_start_date,
+        rent_end_date: book.rent_end_date,
+        total_price: Number(book.total_price),
+        status: book.status,
+        vehicle: {
+          vehicle_name: vehicle.vehicle_name,
+          registration_number: vehicle.registration_number,
+          type: vehicle.type,
+        },
+      };
+    })
+  );
+  return customerBookings;
+};
 
 export const bookingService = {
   createBooking,
   getAllBookings,
-
 };
