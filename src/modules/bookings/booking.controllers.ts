@@ -23,7 +23,27 @@ const createBooking = async(req: Request, res: Response) => {
 }
 
 
+// get all bookings
+const getAllBookings = async(req: Request, res: Response) => {
+    try{
+        // MAKE A CONDITION BASE ON ADMIN | CUSTOMER
+        const result = await bookingService.getAllBookings();
+        res.status(200).json({
+            success: true,
+            message: "Bookings retrieved successfully",
+            data: result
+        })
+    }catch(err: any){
+        res.status(500).json({
+            success: false,
+            message: err.message
+        })
+    }
+}
+
+
 export const bookingController = {
     createBooking,
+    getAllBookings,
 
 }
