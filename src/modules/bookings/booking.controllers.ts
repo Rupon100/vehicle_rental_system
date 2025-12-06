@@ -44,8 +44,29 @@ const getAllBookings = async(req: Request, res: Response) => {
 }
 
 
+// role based update booking
+const updateBooking = async(req: Request, res: Response) => {
+    try{
+        const role = req.user?.role;
+        const id  = req.params.bookingId;
+        const { status } = req.body;
+        const result = await bookingService.updateBooking(role, id as string, status);
+        res.status(200).json({
+            success: true,
+            data: result
+        })
+    }catch(err: any){
+        res.status(500).json({
+            success: false,
+            message: err.message,
+        })
+    }
+}
+
+
 export const bookingController = {
     createBooking,
     getAllBookings,
+    updateBooking,
 
 }

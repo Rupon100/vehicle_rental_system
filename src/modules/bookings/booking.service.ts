@@ -92,7 +92,7 @@ const getAllBookings = async (role: string) => {
   const customerBookings = await Promise.all(
     bookings.map(async (book) => {
       const vehicle = await getVehicleFrBookings(book.vehicle_id);
-    //   const vehicle = vehicleResult.rows[0];
+      //   const vehicle = vehicleResult.rows[0];
 
       return {
         id: book.id,
@@ -112,7 +112,45 @@ const getAllBookings = async (role: string) => {
   return customerBookings;
 };
 
+// role based
+const updateBooking = async (role: string, id: string, status: string) => {
+  const result = await pool.query(
+    `UPDATE bookings SET status=$1 WHERE id=$2 RETURNING *`,
+    [status, id]
+  );
+
+  // if not found
+  if (result.rowCount === 0) {
+    throw new Error("Booking not found!");
+  }
+
+  // admin
+  if (role === "admin" && status === "cancelled") {
+    throw new Error("Admin cannot cancel a booking");
+  }
+
+  // customer
+  if (role !== "admin" && status === "returned") {
+    throw new Error("Customer cannot set returned status");
+  }
+
+  const booking = result.rows[0];
+
+  // for admin
+  if (role === "admin") {
+    const adminResponse = {
+      ...result,
+      vehicle: { availability_status: "available" },
+    };
+    return adminResponse;
+  }
+
+  // for customer
+  return booking;
+};
+
 export const bookingService = {
   createBooking,
   getAllBookings,
+  updateBooking,
 };
