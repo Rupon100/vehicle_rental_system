@@ -8,7 +8,7 @@ const verify = (...roles: string[]) => {
       const barrier = req.headers.authorization;
       const token = barrier?.split(" ")[1];
 
-      console.log("token from verify middleware: ",barrier);
+      // console.log("token from verify middleware: ",barrier);
 
       if(!token){
         return res.status(403).json({
@@ -36,6 +36,7 @@ const verify = (...roles: string[]) => {
       return res.status(500).json({
         success: false,
         message: err.message,
+        errors: err
       });
     }
   };

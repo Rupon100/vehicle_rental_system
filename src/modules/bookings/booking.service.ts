@@ -138,6 +138,10 @@ const updateBooking = async (role: string, id: string, status: string) => {
 
   // for admin
   if (role === "admin") {
+
+    // When booking is marked as "returned" → Vehicle status changes to "available"
+    // UPDATE VEHICLE STATUS IN VEHICLE TABLE
+
     const adminResponse = {
       ...result,
       vehicle: { availability_status: "available" },
@@ -146,7 +150,11 @@ const updateBooking = async (role: string, id: string, status: string) => {
   }
 
   // for customer
+  // When booking is "cancelled" → Vehicle status changes to "available"
+  // UPDATE VEHICLE STATUS IN VEHICLE TABLE
   return booking;
+
+
 };
 
 export const bookingService = {

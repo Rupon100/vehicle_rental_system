@@ -15,7 +15,8 @@ const createVehicle = async(req: Request, res: Response) => {
     }catch(err:  any){
         res.status(500).json({
             success: false,
-            message: err.message
+            message: err.message,
+            errors: err 
         })
     }
 }
@@ -31,7 +32,8 @@ const getVehicles = async(req: Request, res: Response) => {
     }catch(err: any){
         res.status(500).json({
             success: false,
-            message: err.message
+            message: err.message,
+            errors: err
         })
     }
 }
@@ -49,7 +51,8 @@ const getVehicleById = async(req: Request, res: Response) => {
     }catch(err: any){
         res.status(500).json({
             success: false,
-            message: err.message
+            message: err.message,
+            errors: err
         })
     }
 }
@@ -68,7 +71,8 @@ const updateVehicleById = async(req: Request, res: Response) => {
     }catch(err: any){
         res.status(500).json({
             success: false,
-            message: err.message
+            message: err.message,
+            errors: err
         })
     }
 }
@@ -87,7 +91,8 @@ const deleteVehicle = async(req: Request, res: Response) => {
     }catch(err: any){
         res.status(500).json({
             success: false,
-            message: err.message
+            message: err.message,
+            errors: err
         })
     }
 }
