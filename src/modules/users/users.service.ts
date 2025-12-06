@@ -1,5 +1,7 @@
 import { pool } from "../../config/database";
 import bcrypt from "bcryptjs";
+import getVehicleFrBookings from "../../ulties/getVehiclesFrBooking";
+import getUsersIfBooking from "../../ulties/getUsersIfbooking";
 
 
 const createUser = async(name: string, email: string, password: string, phone: string, role: string) => {
@@ -39,8 +41,19 @@ const updateUser = async(id:  string, name: string, email: string, phone: string
 // delete user [ admin only ] only if not active bookings exist
 const deleteUser = async(id: string) => {
     // add condition here
+    const usersCheck = await getUsersIfBooking(id);
+    if(usersCheck.rowCount === 0){
+        throw new Error("There is not user for you given Id!");
+    }
+
+    const hasActive = usersCheck.rows.some(user => user.status === "active");
+
+    if (hasActive) {
+      throw new Error("Can't delete! Still have active booking!");
+    }
+
     const result = await pool.query('DELETE FROM users WHERE id=$1 RETURNING *', [id]);
-    return result;
+    return result.rows[0];
 }
 
 export const userServices = {
