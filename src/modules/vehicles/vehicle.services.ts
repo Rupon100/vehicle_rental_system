@@ -1,4 +1,5 @@
 import { pool } from "../../config/database";
+import getVehicleFrBookings from "../../ulties/getVehiclesFrBooking";
 
 const createVehicle = async(vehicle_name: string, type: string, registration_number: string, daily_rent_price: string, availability_status: string) => {
     const result = await pool.query(`INSERT INTO vehicles(vehicle_name, type, registration_number, daily_rent_price, availability_status) VALUES($1, $2, $3, $4, $5) RETURNING *`, [vehicle_name, type, registration_number, daily_rent_price, availability_status]);
@@ -30,8 +31,18 @@ const updateVehicleById = async(id: string, vehicle_name: string, type: string, 
 }
 
 const deleteVehicle = async(id: string) => {
+    // if the vehicle is active book do not give permission for delete
+    const vehicle = await getVehicleFrBookings(id);
+
+    if (!vehicle) {
+    throw new Error("Vehicle not found!");
+  }
+
+    if(vehicle.availability_status === "booked"){
+        throw new Error("Cant be deleted! its booked!");
+    }
     const result = await pool.query(`DELETE FROM vehicles WHERE id=$1`, [id]);
-    return result;
+    return result.rows[0];
 }
 
 export const vehicleServices = {
