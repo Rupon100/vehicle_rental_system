@@ -57,6 +57,8 @@ const updateUser = async(req: Request, res: Response) => {
         const id = req.params.userId;
         const { name, email, phone, role } = req.body;
         const result = await userServices.updateUser(id as string, name, email, phone, role);
+        delete result.rows[0].password;
+
         res.status(200).json({
             success: true,
             message: "User updated successfully",
@@ -77,10 +79,10 @@ const deleteUser = async(req: Request, res: Response) => {
         const id = req.params.userId;
         const result = await userServices.deleteUser(id as string);
         // put it in rowCount then send response
+
         res.status(200).json({
             success: true,
             message: "User deleted successfully",
-            data: result
         })
     }catch(err: any){
         res.status(500).json({

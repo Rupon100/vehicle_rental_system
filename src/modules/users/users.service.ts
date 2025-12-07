@@ -46,15 +46,22 @@ const updateUser = async(id:  string, name: string, email: string, phone: string
 // delete user [ admin only ] only if not active bookings exist
 const deleteUser = async(id: string) => {
     // add condition here
-    const usersCheck = await getUsersIfBooking(id);
-    if(usersCheck.rowCount === 0){
-        throw new Error("There is not user for you given Id!");
+   const userExists = await pool.query(
+        'SELECT * FROM users WHERE id=$1',
+        [id]
+    );
+
+    if (userExists.rowCount === 0) {
+        throw new Error("User does not exist!");
     }
 
-    const hasActive = usersCheck.rows.some(user => user.status === "active");
+    const bookingCheck = await pool.query(
+        `SELECT * FROM bookings WHERE customer_id=$1 AND status='active'`,
+        [id]
+    );
 
-    if (hasActive) {
-      throw new Error("Can't delete! Still have active booking!");
+    if (bookingCheck.rowCount ?? 0 > 0) {
+        throw new Error("Can't delete! User still has active booking!");
     }
 
     const result = await pool.query('DELETE FROM users WHERE id=$1 RETURNING *', [id]);
