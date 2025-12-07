@@ -45,10 +45,10 @@ Follow the steps below to set up the project locally
 - cd vehicle-rental-system
 ### 2 Install Dependencies
 - npm install
-### Create .env
+### 3 Create .env
 - JWT_TOKEN ( create it your own )
 - CONNECTION_STRING ( Go to neon -> create a project -> click connect button -> get the connection string -> paste it on .env )
-### Start Development Server Locally
+### 4 Start Development Server Locally
 - npm run dev
 
 ## Usage Instructions
@@ -84,7 +84,7 @@ All protected routes require a JWT token, provided after login:
 ### Vehicle Endpoints
 3. Create Vehicle
 - Access: Admin only
-- POST /api/v1/vehicles
+##### POST /api/v1/vehicles
 - Request Body
 {
   "vehicle_name": "Toyota Camry 2024",
