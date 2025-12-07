@@ -3,14 +3,18 @@ import dateDifferences from "../../ulties/dateDiff";
 import getVehicleFrBookings from "../../ulties/getVehiclesFrBooking";
 import getCustomerDetails from "../../ulties/getCustomerDetails";
 
+
+// expire booking automatically
+const autoBookingUpdate = async() => {
+  await pool.query(`UPDATE bookings SET status = 'returned' WHERE status = 'active' AND rent_end_date::date < CURRENT_DATE`)
+}
+
 const createBooking = async (
   customer_id: string,
   vehicle_id: string,
   rent_start_date: string,
   rent_end_date: string
 ) => {
-  // add vehicle object ------> delete users if not active bookings
-
   // booking date manage
   const differDays = dateDifferences(rent_start_date, rent_end_date);
   if (differDays < 1) {
@@ -20,7 +24,6 @@ const createBooking = async (
   // vehicle details -> calculate total rent
   const vehicleResult = await getVehicleFrBookings(vehicle_id);
   const vehicle = vehicleResult;
-
   if (!vehicle) {
     throw new Error("Vehicle not found!");
   }
@@ -58,9 +61,16 @@ const createBooking = async (
       daily_rent_price: Number(daily_rent_price),
     },
   };
+
+
+
 };
 
 const getAllBookings = async (role: string) => {
+
+  // auto update bookings returned
+  await autoBookingUpdate()
+
   const result = await pool.query(`SELECT * FROM bookings`);
   const bookings = result.rows;
 
@@ -119,6 +129,10 @@ const getAllBookings = async (role: string) => {
 
 // role based
 const updateBooking = async (role: string, id: string, status: string) => {
+
+  // auto update return login
+  await autoBookingUpdate();
+
   const result = await pool.query(
     `UPDATE bookings SET status=$1 WHERE id=$2 RETURNING *`,
     [status, id]
@@ -154,7 +168,6 @@ const updateBooking = async (role: string, id: string, status: string) => {
     return adminResponse;
   }
 
-  // for customer
   // When booking is "cancelled" → Vehicle status changes to "available"
   // UPDATE VEHICLE STATUS IN VEHICLE TABLE
   return booking;
