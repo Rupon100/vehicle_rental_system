@@ -156,7 +156,7 @@ const updateBooking = async (role: string, id: string, status: string) => {
   const booking = result.rows[0];
 
   // if marks admin vehicle status will be available
-  if (status === "returned") {
+  if (status === "returned" || status === "cancelled") {
     await pool.query(
       `UPDATE vehicles SET availability_status = 'available' WHERE id = $1`,
       [booking.vehicle_id]

@@ -1,15 +1,20 @@
 import { pool } from "../../config/database";
 import bcrypt from "bcryptjs";
-import getVehicleFrBookings from "../../ulties/getVehiclesFrBooking";
 import getUsersIfBooking from "../../ulties/getUsersIfbooking";
 
 
 const createUser = async(name: string, email: string, password: string, phone: string, role: string) => {
 
+
+    // check if any letter is capital
+    if (/[A-Z]/.test(email)) {
+      throw new Error("Email cannot contain uppercase letters!");
+    }
+
+
     // validate password(6 char)
     if(password.length < 6){
         throw new Error("Password must be at least 6 characteristics!");
-        
     }
 
     // hashed pass -> insert
