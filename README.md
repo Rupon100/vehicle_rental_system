@@ -52,22 +52,16 @@ Follow the steps below to set up the project locally
 - npm run dev
 
 ## Usage Instructions
-
 This section explains how to use every API endpoint in the Vehicle Rental System.
 All protected routes require a JWT token, provided after login:
+- Authorization: Bearer <jwt_token>
 
-Authorization: Bearer <jwt_token>
-
-🔐 Authentication Endpoints
+#### Authentication Endpoints
 1. User Registration
-
-Access: Public
-Registers a new user.
-
-POST /api/v1/auth/signup
-
-Request Body
-
+- Access: Public
+- Registers a new user.
+##### POST /api/v1/auth/signup
+- Request Body
 {
   "name": "John Doe",
   "email": "john.doe@example.com",
@@ -76,67 +70,22 @@ Request Body
   "role": "customer"
 }
 
-
-Success Response
-
-{
-  "success": true,
-  "message": "User registered successfully",
-  "data": {
-    "id": 1,
-    "name": "John Doe",
-    "email": "john.doe@example.com",
-    "phone": "01712345678",
-    "role": "customer"
-  }
-}
-
 2. User Login
-
-Access: Public
-Returns a JWT token.
-
-POST /api/v1/auth/signin
-
-Request Body
-
+- Access: Public
+- Returns a JWT token.
+##### POST /api/v1/auth/signin
+- Request Body
 {
   "email": "john.doe@example.com",
   "password": "securePassword123"
 }
 
 
-Success Response
-
-{
-  "success": true,
-  "message": "Login successful",
-  "data": {
-    "token": "jwt_token_here",
-    "user": {
-      "id": 1,
-      "name": "John Doe",
-      "email": "john.doe@example.com",
-      "phone": "+1234567890",
-      "role": "customer"
-    }
-  }
-}
-
-🚗 Vehicle Endpoints
+### Vehicle Endpoints
 3. Create Vehicle
-
-Access: Admin only
-
-POST /api/v1/vehicles
-
-Headers
-
-Authorization: Bearer <jwt_token>
-
-
-Request Body
-
+- Access: Admin only
+- POST /api/v1/vehicles
+- Request Body
 {
   "vehicle_name": "Toyota Camry 2024",
   "type": "car",
@@ -144,64 +93,18 @@ Request Body
   "daily_rent_price": 50,
   "availability_status": "available"
 }
-
-
-Success Response
-
-{
-  "success": true,
-  "message": "Vehicle created successfully",
-  "data": {
-    "id": 1,
-    "vehicle_name": "Toyota Camry 2024",
-    "type": "car",
-    "registration_number": "ABC-1234",
-    "daily_rent_price": 50,
-    "availability_status": "available"
-  }
-}
-
 4. Get All Vehicles
-
 Access: Public
-
-GET /api/v1/vehicles
-
-Success Response
-
-{
-  "success": true,
-  "message": "Vehicles retrieved successfully",
-  "data": [...]
-}
+##### GET /api/v1/vehicles
 
 5. Get Vehicle by ID
-
-Access: Public
-
-GET /api/v1/vehicles/:vehicleId
-
-Success Response
-
-{
-  "success": true,
-  "message": "Vehicle retrieved successfully",
-  "data": { ... }
-}
+- Access: Public
+##### GET /api/v1/vehicles/:vehicleId
 
 6. Update Vehicle
-
-Access: Admin only
-
-PUT /api/v1/vehicles/:vehicleId
-
-Headers
-
-Authorization: Bearer <jwt_token>
-
-
-Request Body (optional fields)
-
+- Access: Admin only
+##### PUT /api/v1/vehicles/:vehicleId
+- Request Body (optional fields)
 {
   "vehicle_name": "Toyota Camry 2024 Premium",
   "type": "car",
@@ -210,106 +113,37 @@ Request Body (optional fields)
   "availability_status": "available"
 }
 
-
-Success Response
-
-{
-  "success": true,
-  "message": "Vehicle updated successfully",
-  "data": { ... }
-}
-
 7. Delete Vehicle
+- Access: Admin only
+- Deletes vehicle if no active bookings exist.
+##### DELETE /api/v1/vehicles/:vehicleId
 
-Access: Admin only
-Deletes vehicle if no active bookings exist.
 
-DELETE /api/v1/vehicles/:vehicleId
-
-Success Response
-
-{
-  "success": true,
-  "message": "Vehicle deleted successfully"
-}
-
-👥 User Endpoints
+### User Endpoints
 8. Get All Users
-
-Access: Admin only
-
-GET /api/v1/users
-
-Headers
-
-Authorization: Bearer <jwt_token>
-
-
-Success Response
-
-{
-  "success": true,
-  "message": "Users retrieved successfully",
-  "data": [...]
-}
+- Access: Admin only
+##### GET /api/v1/users
 
 9. Update User
-
-Access: Admin OR Own profile
-
-PUT /api/v1/users/:userId
-
-Headers
-
-Authorization: Bearer <jwt_token>
-
-
-Request Body (optional)
-
+- Access: Admin OR Own profile
+##### PUT /api/v1/users/:userId
+- Request Body (optional)
 {
   "name": "John Doe Updated",
   "email": "john.updated@example.com",
   "phone": "+1234567899",
   "role": "admin"
 }
-
-
-Success Response
-
-{
-  "success": true,
-  "message": "User updated successfully",
-  "data": { ... }
-}
-
 10. Delete User
+- Access: Admin only
+##### DELETE /api/v1/users/:userId
 
-Access: Admin only
-
-DELETE /api/v1/users/:userId
-
-Success Response
-
-{
-  "success": true,
-  "message": "User deleted successfully"
-}
-
-📅 Booking Endpoints
+### Booking Endpoints
 11. Create Booking
-
-Access: Customer or Admin
-Automatically calculates pricing & updates vehicle availability.
-
-POST /api/v1/bookings
-
-Headers
-
-Authorization: Bearer <jwt_token>
-
-
-Request Body
-
+- Access: Customer or Admin
+- Automatically calculates pricing & updates vehicle availability.
+##### POST /api/v1/bookings
+- Request Body
 {
   "customer_id": 1,
   "vehicle_id": 2,
@@ -317,56 +151,19 @@ Request Body
   "rent_end_date": "2024-01-20"
 }
 
-
-Success Response
-
-{
-  "success": true,
-  "message": "Booking created successfully",
-  "data": { ... }
-}
-
 12. Get All Bookings
+- Access: Admin → sees all bookings
+- Customer → sees only their bookings
+#### GET /api/v1/bookings
 
-Access:
-
-Admin → sees all bookings
-
-Customer → sees only their bookings
-
-GET /api/v1/bookings
-
-Headers
-
-Authorization: Bearer <jwt_token>
-
-
-Success Response (admin/customer)
-Returns data based on role.
 
 13. Update Booking
-
-Access:
-
-Customer → can cancel
-
-Admin → can mark as returned
-
-PUT /api/v1/bookings/:bookingId
-
-Headers
-
-Authorization: Bearer <jwt_token>
-
-Customer Cancel Example
+- Access: Customer → can cancel
+- Admin → can mark as returned
+##### PUT /api/v1/bookings/:bookingId
+- Customer Cancel Example
 { "status": "cancelled" }
-
-Admin Mark Returned Example
+- Admin Mark Returned Example
 { "status": "returned" }
 
-
-Success Responses
-
-Booking cancelled
-
-Booking marked returned + vehicle made available
+ 
