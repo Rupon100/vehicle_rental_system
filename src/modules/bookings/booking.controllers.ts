@@ -63,6 +63,7 @@ const updateBooking = async (req: Request, res: Response) => {
     );
     res.status(200).json({
       success: true,
+      message: "Booking cancelled successfully",
       data: result,
     });
   } catch (err: any) {
